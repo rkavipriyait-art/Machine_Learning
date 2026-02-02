@@ -1,0 +1,227 @@
+Nutritious Food Recommendation System Using K-Means Clustering:
+
+This system clusters foods based on nutritional similarity using K-Means and recommends meals by combining
+BMI category and dietary preferences.
+
+Step 1: Load the Dataset
+Import required libraries
+Read the nutrition dataset (Kavipriya_Nutritious_Food_Recommendation.csv)
+Check rows, columns, data types, and basic statistics
+Purpose: Understand what data is available
+
+Note:
+df['Dietary Preference'].unique()
+Omnivore -
+It refers both plant and animal-based foods (Veg and Non-Veg).
+Animal-Based Foods:
+Meat: Beef, chicken, pork, turkey, lamb, and wild game.
+Seafood: Fish (salmon, tuna, cod), crustaceans, and shellfish.
+Dairy: Milk, cheese, yogurt, and butter.
+Eggs: Chicken, duck, and other bird eggs.
+Plant-Based Foods:
+Vegetables: Leafy greens, root vegetables, cruciferous vegetables.
+Fruits: Berries, citrus, apples, bananas, etc.
+Grains: Whole grains like rice, oats, wheat, quinoa, and barley.
+Legumes & Beans: Lentils, chickpeas, black beans, peanuts.
+Nuts & Seeds: Almonds, walnuts, chia seeds, flax seeds.
+
+Vegetarian - It focusing on plants like fruits, vegetables, grains, legumes, nuts, and seeds to provide essential nutrients.
+
+Vegan -
+It refers plant-based foods, excluding all animal products like meat, dairy, eggs, and honey.
+Vegetables & Fruits: Leafy greens, root vegetables, berries, citrus, etc..
+Legumes: Lentils, chickpeas, black beans, peas.
+Whole Grains: Oats, quinoa, brown rice, barley, whole-wheat pasta/bread.
+Nuts & Seeds: Almonds, walnuts, chia seeds, flaxseeds, sunflower seeds.
+Plant-Based Proteins: Tofu, tempeh, seitan, veggie burgers.
+Dairy Alternatives: Soy, almond, oat, or coconut milk, yogurt, and cheese.
+Healthy Fats: Avocado, olive oil, coconut oil, nut butters.
+
+Pescatarian -
+It refers to a person whose diet includes fish but no other meat.
+Seafood: Fish, shellfish, etc.
+Plant-Based Foods: Fruits, vegetables, grains, nuts, legumes, beans
+Dairy & Eggs: Milk, cheese, yogurt, and eggs are usually included.
+
+
+Step 2: Data Exploration (EDA)
+Check missing values and duplicates
+Analyze age distribution using histogram
+Compare average calories across dietary preferences
+Visualize correlations using a heatmap
+Purpose: Identify patterns and relationships in data
+
+
+Step 3: Feature Engineering
+Calculate BMI using height and weight
+Categorize BMI into:
+Underweight
+Normal
+Overweight
+Obese
+Purpose: Add health-related information for recommendations
+
+
+Step 4: Data Preprocessing
+Convert categorical variables (Gender, Activity Level, Disease) into numerical values using Label Encoding
+Select nutrition features:
+Calories
+Protein
+Carbohydrates
+Fat
+Normalize features using StandardScaler
+Purpose: Prepare data for clustering
+
+
+Step 5: Find Optimal Number of Clusters
+Apply Elbow Method using KElbowVisualizer
+Analyze distortion curve
+Select optimal value of k = 4
+Purpose: Decide how many nutrition groups are needed
+
+
+Step 6: Apply K-Means Clustering
+Perform KMeans clustering on scaled nutrition features
+Assign a cluster label to each food item
+Purpose: Group foods based on nutritional similarity
+
+
+Step 7: PCA-Based Visualization
+Apply PCA to reduce data from 4D to 2D
+Plot clusters using scatter plot
+Display cluster centers
+Purpose: Visually verify cluster separation
+
+
+Step 8: Cluster Interpretation
+Calculate mean nutrition values for each cluster
+Label clusters as:
+High Carb
+Energy Dense
+Low Calorie
+High Protein
+Purpose: Understand what each cluster represents
+
+For Ex:
+cluster_summary output:
+            Calories     Protein  Carbohydrates         Fat
+Cluster
+0        2390.206349  113.536508     334.365079   66.511111
+1        3114.038732  223.654930     326.218310  101.616197
+2        1632.849921   99.965245     192.349131   51.510269
+3        2271.802575  160.916309     233.523605   77.115880
+
+Cluster 0 → High Carb
+    Highest carbohydrates (334)
+    Calories are moderate-high
+    Protein relatively lower
+    ->This is High Carb, NOT balanced
+
+Cluster 1 → Energy Dense
+    Highest calories (3114)
+    Highest fat (101)
+    Very high protein too
+    ->This is Energy Dense, not just high protein
+
+Cluster 2 → Low Calorie
+    Lowest calories (1632)
+    Lowest fat
+    Lower carbs
+    ->This is clearly Low Calorie
+
+Cluster 3 → High Protein
+    Second-highest protein (161)
+    Moderate calories
+    Balanced fat & carbs
+    ->This fits High Protein (leaner than cluster 1)
+
+
+Step 9: BMI-Based Cluster Mapping
+Map BMI categories to suitable nutrition clusters
+Purpose: Align nutrition with health needs
+
+BMI Based nutrition data:
+BMI Category	            Goal	            Calories/day	        Protein	        Carbs
+Underweight	            Weight gain	            2400–2700	            90–110 g	    300–350 g
+Normal	                Maintenance	            2000–2200	            80–100 g	    250–300 g
+Overweight	            Fat loss	            1600–1800	            100–120 g	    180–220 g
+Obese	                Aggressive fat loss	    1400–1600	            110–130 g	    130–180 g
+
+Nutrition Logic by BMI Category
+
+Underweight:
+Goal: Calorie surplus + energy
+Energy-dense foods
+Carb-rich meals for quick energy
+➡ Preferred clusters:(Energy Dense,High Carb)
+
+Normal:
+Goal: Maintenance + muscle support
+Balanced calories
+Adequate protein
+➡ Preferred clusters:(High Protein,High Carb (in moderation))
+
+Overweight:
+Goal: Fat loss + muscle preservation
+Reduced calories
+High protein
+➡ Preferred clusters:(Low Calorie,High Protein)
+
+Obese:
+Goal: Aggressive calorie control
+Low calorie
+Lower fat & carbs
+➡ Preferred clusters:(Low Calorie only)
+
+
+Step 10: Meal Recommendation Logic
+Filter foods based on BMI-recommended clusters
+Apply dietary preference filter (optional)
+Extract breakfast, lunch, dinner, and snack suggestions
+Purpose: Generate personalized meal recommendations
+
+def recommend_meals(df, bmi_cat, dietary_pref=None):
+-> defining function
+
+preferred_clusters = bmi_cluster_pref.get(bmi_cat, [])
+->Looks up which nutrition clusters are suitable for the given BMI category
+->Uses .get() to avoid errors if the BMI category is not found
+->Returns an empty list if BMI category is invalid
+
+recommendations = df[df["Cluster_Type"].isin(preferred_clusters)]
+->Filters the dataset
+->Keeps only rows whose Cluster_Type matches the recommended clusters
+->This ensures meals align with nutritional needs of the BMI category
+
+if dietary_pref:
+->Checks if the user has provided a dietary preference
+->If None or empty, this block is skipped
+
+mask = (recommendations["Dietary Preference"].str.contains(dietary_pref, case=False, na=False))
+->Creates a boolean filter (mask)
+->.str.contains() checks if dietary preference text matches
+->case=False → case-insensitive comparison
+->na=False → prevents errors from missing values
+
+recommendations = recommendations[mask]
+->Applies the mask
+->Keeps only meals matching the dietary preference
+
+breakfast = recommendations["Breakfast Suggestion"].dropna().unique().tolist()
+->Selects the Breakfast Suggestion column
+->Removes missing values using .dropna()
+->Removes duplicate meals using .unique()
+->Converts results into a Python list
+
+lunch = recommendations["Lunch Suggestion"].dropna().unique().tolist()
+dinner = recommendations["Dinner Suggestion"].dropna().unique().tolist()
+snacks = recommendations["Snack Suggestion"].dropna().unique().tolist()
+->Extracts unique meal suggestions following the same process
+
+
+Step 11: Result Display
+BMI
+BMI Category
+Daily Calorie Target based on BMI
+Show recommended meals
+
