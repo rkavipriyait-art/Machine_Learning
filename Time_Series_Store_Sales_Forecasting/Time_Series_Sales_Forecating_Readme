@@ -1,0 +1,108 @@
+Sales Forecasting & Fraud Detection using SARIMA
+
+Project Overview
+This project implements a Time Series Sales Forecasting and Fraud Detection System using the SARIMA (Seasonal ARIMA) model.
+
+It performs:
+-> Sales trend & seasonality analysis
+-> Stationarity testing using ADF
+-> Sales forecasting using SARIMA
+-> Category-wise forecasting
+-> Revenue growth analysis (MoM, YoY, CAGR)
+-> Residual-based fraud detection
+
+The system uses daily aggregated sales data and applies statistical modeling techniques to forecast future sales and detect anomalies.
+
+Dataset : stores_sales_forecasting.csv
+
+Expected Columns:
+Order Date
+Sales
+Category (optional but required for category forecasting)
+
+Technologies Used:
+Python
+Pandas
+NumPy
+Matplotlib
+Statsmodels (SARIMAX)
+Scikit-learn
+
+Workflow:
+
+1️. Data Preprocessing:
+Convert Order Date to datetime
+Sort chronologically
+Set as index
+Resample to daily frequency
+Fill missing dates with 0
+daily_sales = df['Sales'].resample('D').sum().asfreq('D').fillna(0)
+
+2. Trend & Seasonality Analysis:
+Seasonal decomposition (30-day period)
+Monthly sales visualization
+
+3. Stationarity Check
+Uses Augmented Dickey-Fuller (ADF) Test
+Interpretation:
+p-value < 0.05 → Stationary
+No non-seasonal differencing required
+
+4. Sales Forecasting (SARIMA)
+Model used:
+order=(1,0,1)
+seasonal_order=(1,0,1,30)
+80% Train
+20% Test
+Confidence intervals plotted
+
+Evaluation Metrics:
+RMSE
+MAE
+MAPE
+
+5️. Category-wise Forecasting:
+For each unique Category:
+Resample daily
+Train SARIMA
+Print RMSE
+
+6️. Revenue Growth Analysis:
+Month-over-Month (MoM)
+monthly_revenue.pct_change() * 100
+Year-over-Year (YoY)
+CAGR (Compound Annual Growth Rate)
+
+7️. Residual-Based Fraud Detection:
+Fraud detection is implemented using:
+Fit SARIMA on full dataset
+Extract residuals
+Standardize residuals (Z-score)
+
+Flag anomalies where:
+|z_score| > 3
+
+These extreme deviations indicate suspicious sales spikes or drops.
+Fraud dates are highlighted in the plot.
+
+Output:
+The system generates:
+Seasonal decomposition plot
+Monthly trend plot
+Forecast vs Actual plot
+Revenue growth visualization
+Fraud detection visualization
+RMSE / MAE / MAPE metrics
+Fraud date list
+
+Why SARIMA?
+SARIMA is chosen because:
+Handles seasonality (30-day cycle)
+Works well with stationary series
+Provides confidence intervals
+Produces interpretable residuals (useful for fraud detection)
+
+If ADF p-value > 0.05, non-seasonal differencing (d=1) may be required.
+Fraud detection uses statistical deviation, not ML classification.
+Zero sales days may impact MAPE (division by zero).
+
