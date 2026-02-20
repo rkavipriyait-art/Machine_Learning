@@ -1,0 +1,87 @@
+Statistical Analysis for Student Performance
+
+Descriptive Statistical Analysis:
+Calculated:
+Mean
+Median
+Mode
+Variance
+Standard Deviation
+Range
+
+Visualizations:
+Histogram
+Boxplot (Outlier Detection)
+Density Distribution Curve
+Skewness Visualization
+Kurtosis Visualization (Standardized Data)
+
+Skewness
+0 → Right-skewed distribution
+< 0 → Left-skewed distribution
+≈ 0 → Symmetrical
+
+Kurtosis
+0 → Heavy tails
+< 0 → Light tails
+≈ 0 → Normal distribution
+
+Inferential statistics:
+Inferential statistics is used to draw conclusions about a population based on sample data.
+
+Independent T-Test
+Compares total_score between:
+High Attendance Group
+Low Attendance Group
+Purpose:
+Determine whether attendance significantly affects performance.
+
+ANOVA (Analysis of Variance)
+Tests whether mean total_score differs across grade categories.
+Model Used:
+total_score ~ C(grade)
+Visualization:
+Boxplot by Grade
+
+Pearson Correlation Test
+Measures relationship between:
+Weekly Self Study Hours
+Total Score
+Output:
+Correlation Coefficient
+P-value
+Visualization:
+Scatter Plot
+
+Predictive Statistical Analysis
+Multiple Linear Regression
+Predicts total_score using:
+Weekly Self Study Hours
+Attendance Percentage
+Class Participation
+Model:
+total_score ~ study_hours + attendance + participation
+Outputs:
+Coefficients
+R-squared
+P-values
+Regression Summary
+
+Notes:
+A Z-test is used to test the sample mean when the sample size is large (n > 30) or population variance is known.
+A t-test is used to test the sample mean when the sample size is small and population variance is unknown.
+A Chi-square test is used to determine whether there is an association between two categorical variables.
+ANOVA (Analysis of Variance) is used to compare the means of more than two groups.
+If the p-value < 0.05, the result is statistically significant; otherwise, it is not significant.
+
+p_value in inferential statistics
+p < 0.05 → Significant difference
+p ≥ 0.05 → No significant difference
+
+If p-value ≈ 0:
+There is very strong evidence against the null hypothesis
+You reject the null hypothesis
+The result is highly statistically significant
+
+Small p-value → Strong evidence against null hypothesis
+Large p-value → Weak evidence against null hypothesis
